@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MyMoneySaver/MyMoneySaver.Client/MyMoneySaver.Client.csproj" />
+  <Project Path="MyMoneySaver/MyMoneySaver/MyMoneySaver.csproj" />
+</Solution>
