@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet build:*)",
+      "Bash(powershell:*)",
+      "Bash(test:*)",
+      "Bash(Get-Date -UFormat \"%y%m%d\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,5 +1,6 @@
 using MyMoneySaver.Client.Pages;
 using MyMoneySaver.Components;
+using MudBlazor.Services;
 
 namespace MyMoneySaver
 {
@@ -13,6 +14,9 @@ namespace MyMoneySaver
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
+
+            // Add MudBlazor services
+            builder.Services.AddMudServices();
 
             var app = builder.Build();
 

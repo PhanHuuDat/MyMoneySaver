@@ -37,7 +37,7 @@ dotnet run
 **Type**: Blazor Web Application
 **Framework**: .NET 10.0
 **Architecture**: Hybrid (Server + WebAssembly)
-**UI**: Bootstrap 5
+**UI**: MudBlazor 8.15.0 (Material Design) + Bootstrap 5
 **Status**: Initial template stage
 
 ### Key Features (Planned)
@@ -53,7 +53,7 @@ dotnet run
 ### Frontend
 - **Blazor Web App**: C# for client and server
 - **Render Modes**: Static, Server, WebAssembly, Auto
-- **UI Framework**: Bootstrap 5
+- **UI Framework**: MudBlazor 8.15.0 (Material Design) + Bootstrap 5
 - **JavaScript Interop**: Minimal, as needed
 
 ### Backend
@@ -172,6 +172,7 @@ dotnet publish -c Release -o ./publish
 - `/` - Home page (static)
 - `/counter` - Counter demo (interactive auto)
 - `/weather` - Weather demo (streaming render)
+- `/muddemo` - MudBlazor components demo (interactive server)
 
 ## Configuration
 
@@ -219,12 +220,14 @@ Comprehensive docs in `docs/` directory:
 - **[Codebase Summary](docs/codebase-summary.md)**: Structure, conventions, key files
 - **[Code Standards](docs/code-standards.md)**: Coding guidelines, patterns, best practices
 - **[System Architecture](docs/system-architecture.md)**: Technical architecture, rendering, data flow
+- **[MudBlazor Integration](docs/mudblazor-integration.md)**: MudBlazor setup, components, usage guide
 
 ## Roadmap
 
 ### Phase 1: Foundation (Current)
 - [x] Project setup
 - [x] Documentation
+- [x] MudBlazor integration
 - [ ] Database schema
 - [ ] Core CRUD operations
 - [ ] Basic UI implementation
@@ -299,6 +302,7 @@ For issues or questions:
 ### Documentation
 - [Blazor Documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/)
 - [.NET 10.0 Release](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview)
+- [MudBlazor](https://mudblazor.com/)
 - [Bootstrap 5](https://getbootstrap.com/docs/5.0/)
 
 ### Learning

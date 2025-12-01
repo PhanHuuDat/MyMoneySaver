@@ -4,6 +4,8 @@
 
 MyMoneySaver uses **Blazor Hybrid Architecture** combining server-side rendering with client-side WebAssembly interactivity. This approach balances performance, SEO, and rich user experiences.
 
+**UI Framework**: MudBlazor 8.15.0 - Material Design components for Blazor
+
 ### High-Level Architecture
 
 ```

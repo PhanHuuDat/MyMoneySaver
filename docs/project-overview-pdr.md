@@ -30,7 +30,7 @@ Empower individuals to take control of their finances through intuitive expense 
 ### Frontend
 - **Framework**: Blazor Web App (ASP.NET Core 10.0)
 - **Render Modes**: Hybrid (Static, Server, WebAssembly)
-- **UI Library**: Bootstrap 5
+- **UI Library**: MudBlazor 8.15.0 (Material Design) + Bootstrap 5
 - **Language**: C# 13, HTML, CSS
 - **Client Runtime**: WebAssembly for interactive components
 
