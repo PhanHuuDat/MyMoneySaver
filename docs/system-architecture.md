@@ -688,6 +688,98 @@ End Users
 3. **IIS**: Traditional Windows hosting
 4. **Linux + Nginx**: Reverse proxy setup
 
+## Data Model Architecture (Phase-01)
+
+### Core Models Implemented
+
+```csharp
+// TransactionType Enum
+public enum TransactionType
+{
+    Expense = 0,      // Money going out
+    Income = 1        // Money coming in
+}
+
+// Category Model
+public class Category
+{
+    public int Id { get; set; }                    // Primary Key
+    public string Name { get; set; }               // 1-50 chars (required)
+    public string Icon { get; set; }               // Material Design icon name
+    public string Color { get; set; }              // Hex format (#RRGGBB)
+}
+
+// Transaction Model
+public class Transaction
+{
+    public int Id { get; set; }                    // Primary Key
+    public decimal Amount { get; set; }            // 0.01 - 1,000,000
+    public int CategoryId { get; set; }            // Foreign Key
+    public string Description { get; set; }        // 1-200 chars
+    public DateTime Date { get; set; }             // Defaults to today
+    public TransactionType Type { get; set; }      // Expense or Income
+    public Category? Category { get; set; }        // Navigation property
+}
+```
+
+### Model Validation
+
+All models use `System.ComponentModel.DataAnnotations`:
+
+**Category Validation**:
+- `Name`: Required, length 1-50
+- `Icon`: Required, max length 50
+- `Color`: Required, regex validation for hex format (#RRGGBB)
+
+**Transaction Validation**:
+- `Amount`: Required, range 0.01 - 1,000,000
+- `CategoryId`: Required, minimum value 1
+- `Description`: Required, length 1-200
+- `Date`: Required, defaults to `DateTime.Today`
+- `Type`: Required, defaults to `TransactionType.Expense`
+
+### Model Organization
+
+Location: `MyMoneySaver/Models/`
+
+Files:
+1. `TransactionType.cs`: Enum for type classification
+2. `Category.cs`: Category entity with Material Design support
+3. `Transaction.cs`: Transaction entity with full validation
+
+### Data Flow Architecture
+
+```
+Blazor Component
+  ↓
+Form/Edit Component (with EditForm)
+  ↓
+Data Validation (Annotations on Model)
+  ├─ Client-side validation (EditForm in interactive modes)
+  └─ Server-side validation (required for security)
+  ↓
+Service Layer (Future)
+  ↓
+Repository Pattern (Future - EF Core)
+  ↓
+Database Context
+  ↓
+Database
+```
+
+### Entity Relationship (Phase-01)
+
+```
+Categories (1 → Many) Transactions
+  ├─ One Category has many Transactions
+  └─ Transaction.CategoryId references Category.Id
+```
+
+Current implementation is model-only (no database yet). Models are ready for:
+- Entity Framework Core DbContext setup
+- Database migrations
+- CRUD operations via repositories
+
 ## Database Architecture (Future)
 
 ### Planned Architecture
@@ -706,7 +798,7 @@ Database Provider (SQL Server / PostgreSQL)
 Database
 ```
 
-### Entity Relationship (Planned)
+### Extended Entity Relationship (Planned)
 
 ```
 Users
@@ -721,13 +813,14 @@ Categories
   ├─ Icon
   └─ Color
 
-Expenses
+Transactions (Currently "Expenses")
   ├─ Id (PK)
   ├─ UserId (FK → Users)
   ├─ CategoryId (FK → Categories)
   ├─ Amount
   ├─ Description
   ├─ Date
+  ├─ Type (TransactionType)
   └─ CreatedDate
 
 Budgets

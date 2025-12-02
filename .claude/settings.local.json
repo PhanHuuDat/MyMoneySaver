@@ -5,7 +5,15 @@
       "Bash(dotnet build:*)",
       "Bash(powershell:*)",
       "Bash(test:*)",
-      "Bash(Get-Date -UFormat \"%y%m%d\")"
+      "Bash(Get-Date -UFormat \"%y%m%d\")",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Skill(skill-creator)",
+      "Skill(claude-code)",
+      "Bash(bash:*)",
+      "Skill(docs-seeker)",
+      "Bash(node scripts/fetch-docs.js:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

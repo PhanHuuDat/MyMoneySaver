@@ -26,6 +26,10 @@ MyMoneySaver/
 │   │   ├── App.razor                     # Root HTML document
 │   │   ├── Routes.razor                  # Router configuration
 │   │   └── _Imports.razor                # Global using directives
+│   ├── Models/                            # Data models (phase-01)
+│   │   ├── TransactionType.cs            # Enum: Expense/Income classification
+│   │   ├── Category.cs                   # Category model with icon & color
+│   │   └── Transaction.cs                # Transaction model with validation
 │   ├── Properties/
 │   │   └── launchSettings.json           # Development server config
 │   ├── wwwroot/                          # Static web assets
@@ -239,12 +243,54 @@ Following development rules:
 }
 ```
 
+## Data Models (Phase-01)
+
+### Implemented Models
+
+#### TransactionType Enum
+**File**: `Models/TransactionType.cs`
+- **Expense** (0): Money going out (default)
+- **Income** (1): Money coming in
+
+#### Category Model
+**File**: `Models/Category.cs`
+
+Properties:
+- `Id` (int): Unique identifier
+- `Name` (string): Category display name (1-50 chars, required)
+- `Icon` (string): Material Design icon name (max 50 chars, defaults to "category")
+- `Color` (string): Hex color code (format: #RRGGBB, required)
+
+Validation:
+- Name required and length-constrained
+- Icon configured for MudBlazor compatibility
+- Color validated against hex format regex
+
+#### Transaction Model
+**File**: `Models/Transaction.cs`
+
+Properties:
+- `Id` (int): Unique identifier
+- `Amount` (decimal): Transaction amount (0.01 - 1,000,000, required)
+- `CategoryId` (int): Foreign key to Category (required, min 1)
+- `Description` (string): Transaction note (1-200 chars, required)
+- `Date` (DateTime): Transaction date (defaults to today, required)
+- `Type` (TransactionType): Expense or Income (defaults to Expense, required)
+- `Category` (Category?): Navigation property for related category
+
+Validation:
+- All properties required with data annotations
+- Amount range enforced (0.01 - 1,000,000)
+- Description length constrained (1-200)
+- CategoryId minimum validation
+- Descriptive error messages for validation
+
 ## Next Steps for Expansion
 
 ### Typical Additions
 
-1. **Services folder**: Business logic, data access
-2. **Models folder**: Data models, DTOs
+1. **Services folder**: Business logic, data access (partially done)
+2. **Models folder**: Data models, DTOs (DONE - phase-01)
 3. **Shared components**: Reusable UI components
 4. **API endpoints**: Minimal APIs or controllers
 5. **Database integration**: EF Core, Dapper
