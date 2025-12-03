@@ -20,6 +20,7 @@ MyMoneySaver/
 │   │   │   └── ReconnectModal.razor.js   # Modal JS interop
 │   │   ├── Pages/                        # Routable page components
 │   │   │   ├── Home.razor                # Home page (static)
+│   │   │   ├── Transactions.razor        # Money tracker page (phase-03, 224 lines)
 │   │   │   ├── Weather.razor             # Weather demo (streaming render)
 │   │   │   ├── Error.razor               # Error page
 │   │   │   └── NotFound.razor            # 404 page
@@ -30,6 +31,9 @@ MyMoneySaver/
 │   │   ├── TransactionType.cs            # Enum: Expense/Income classification
 │   │   ├── Category.cs                   # Category model with icon & color
 │   │   └── Transaction.cs                # Transaction model with validation
+│   ├── Services/                          # Business logic services (phase-02)
+│   │   ├── CategoryService.cs            # Category CRUD with seed data
+│   │   └── TransactionService.cs         # Transaction CRUD, filtering, summaries
 │   ├── Properties/
 │   │   └── launchSettings.json           # Development server config
 │   ├── wwwroot/                          # Static web assets
@@ -287,15 +291,19 @@ Validation:
 
 ## Next Steps for Expansion
 
-### Typical Additions
+### Implemented Additions
 
-1. **Services folder**: Business logic, data access (partially done)
-2. **Models folder**: Data models, DTOs (DONE - phase-01)
-3. **Shared components**: Reusable UI components
-4. **API endpoints**: Minimal APIs or controllers
-5. **Database integration**: EF Core, Dapper
-6. **Authentication**: Identity, external providers
-7. **State management**: Fluxor, custom services
+1. **Services folder**: Business logic, event-driven architecture (DONE - phase-02)
+2. **Models folder**: Data models with validation (DONE - phase-01)
+3. **UI Components**: Transaction management page (DONE - phase-03)
+
+### Future Additions
+
+1. **Shared components**: Reusable dialog components
+2. **API endpoints**: Minimal APIs or controllers (if needed)
+3. **Database integration**: EF Core, Dapper
+4. **Authentication**: Identity, external providers
+5. **State management**: Fluxor (if complex state needed)
 
 ### File Organization Recommendations
 
@@ -312,8 +320,120 @@ Validation:
 - **Largest Files**: Bootstrap CSS/JS source maps (external dependencies)
 - **Core Code**: ~20 custom files (rest are libraries)
 
+## Services Architecture (Phase-02)
+
+### CategoryService
+**File**: `Services/CategoryService.cs` (127 lines)
+
+Features:
+- **CRUD Operations**: GetAll, GetById, Add, Update, Delete
+- **Seed Data**: 6 default categories (Food, Transport, Entertainment, Shopping, Bills, Other)
+- **Event-Driven**: OnCategoriesChanged event for reactive UI
+- **In-Memory Storage**: Session-scoped list
+- **Material Icons**: Icon names for MudBlazor integration
+- **Hex Colors**: Custom colors per category
+
+### TransactionService
+**File**: `Services/TransactionService.cs` (136 lines)
+
+Features:
+- **CRUD Operations**: GetAll, GetById, Add, Update, Delete
+- **Filtering**: By category, date range, transaction type
+- **Summaries**: GetTotalBalance, GetTotalIncome, GetTotalExpenses
+- **Category Analytics**: GetCategoryTotals for grouping
+- **Event-Driven**: OnTransactionsChanged event for reactive UI
+- **In-Memory Storage**: Session-scoped list
+
+### Service Pattern
+
+```csharp
+// Event-driven reactive updates
+public event Action? OnTransactionsChanged;
+
+// CRUD operations trigger events
+public void Add(Transaction transaction)
+{
+    _transactions.Add(transaction);
+    OnTransactionsChanged?.Invoke();  // Notify subscribers
+}
+```
+
+## UI Components (Phase-03)
+
+### Transactions.razor Page
+**File**: `Components/Pages/Transactions.razor` (224 lines)
+**Route**: `/transactions`
+**Render Mode**: InteractiveServer
+
+#### Features Implemented
+1. **Summary Cards Section**: Balance, Income, Expenses with color-coded display
+2. **Filter Controls**: Category dropdown, Type select, Date range pickers
+3. **Transaction Table**: Display with MudTable (Date, Category, Description, Type, Amount)
+4. **Action Buttons**: Add Transaction, Manage Categories
+5. **CRUD Actions**: Edit/Delete buttons per row
+6. **Reactive Updates**: Subscribes to service events for auto-refresh
+
+#### MudBlazor Components Used
+- MudContainer, MudGrid, MudItem
+- MudCard, MudCardContent
+- MudTable, MudTh, MudTd
+- MudSelect, MudSelectItem
+- MudDatePicker
+- MudButton, MudIconButton
+- MudChip (with icons and colors)
+- MudText, MudPaper, MudStack
+
+#### Event-Driven Architecture
+
+```razor
+@code {
+    protected override void OnInitialized()
+    {
+        // Subscribe to service events
+        TransactionService.OnTransactionsChanged += HandleDataChanged;
+        CategoryService.OnCategoriesChanged += HandleDataChanged;
+        LoadData();
+    }
+
+    private void HandleDataChanged()
+    {
+        LoadData();
+        StateHasChanged();  // Re-render UI
+    }
+
+    public void Dispose()
+    {
+        // Clean up subscriptions (prevent memory leaks)
+        TransactionService.OnTransactionsChanged -= HandleDataChanged;
+        CategoryService.OnCategoriesChanged -= HandleDataChanged;
+    }
+}
+```
+
+#### Helper Methods
+- `FormatCurrency(decimal)`: $1,234.56 formatting
+- `GetBalanceColor()`: Dynamic color based on balance
+- `GetCategoryName/Icon/Color(int)`: Category lookup from service
+
+#### Current Limitations (TODOs)
+- Add/Edit dialog implementation simplified (placeholders)
+- Delete confirmation dialog not yet implemented
+- Category management dialog not yet implemented
+
 ## Summary
 
-MyMoneySaver is a clean, modern Blazor Web App template with hybrid rendering capabilities. Project structure follows standard Blazor conventions with clear separation between server and client concerns. Current implementation demonstrates three key Blazor render modes (static, streaming, interactive) and provides foundation for money-saving application features.
+MyMoneySaver is a modern Blazor Web App with functional money tracking capabilities. Project structure follows standard Blazor conventions with clean separation of concerns. Current implementation includes:
 
-Codebase is minimal, follows YAGNI/KISS/DRY principles, and ready for feature expansion while maintaining clean architecture.
+**Completed Phases:**
+- **Phase 01**: Data models with validation
+- **Phase 02**: Service layer with event-driven architecture
+- **Phase 03**: UI component with MudBlazor integration
+
+**Architecture Patterns:**
+- Event-driven reactive UI updates
+- Service-based state management
+- Component lifecycle with proper disposal
+- Material Design via MudBlazor
+- Server-Interactive rendering for real-time updates
+
+Codebase follows YAGNI/KISS/DRY principles with all files under 225 lines. Ready for Phase 04 (Infrastructure) and future enhancements (dialogs, persistence, authentication).

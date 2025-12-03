@@ -275,7 +275,7 @@ Routes auto-discovered via `@page` directive:
 
 ## Data Flow Patterns
 
-### Current: Component-Local State
+### Current: Component-Local State (Counter.razor)
 
 ```
 Component
@@ -299,36 +299,92 @@ Component
 }
 ```
 
-### Future: Service-Based State
+### Current: Service-Based Event-Driven State (Transactions.razor - Phase 03)
 
 ```
-Component
+Component OnInitialized
   ↓
-  Inject Service
+  Subscribe to service events
   ↓
-  Service manages state
+  Load initial data from services
   ↓
-  Component subscribes to changes
+  User action (button click)
   ↓
-  UI updates on state change notification
+  Call service method (Add/Update/Delete)
+  ↓
+  Service modifies in-memory state
+  ↓
+  Service fires event (OnTransactionsChanged)
+  ↓
+  Component event handler receives notification
+  ↓
+  Component reloads data
+  ↓
+  StateHasChanged() called
+  ↓
+  UI re-renders with updated data
 ```
 
-**Planned Pattern**:
+**Implemented Pattern** (Transactions.razor):
 ```csharp
-@inject ExpenseService ExpenseService
+@inject TransactionService TransactionService
+@inject CategoryService CategoryService
+@implements IDisposable
 
 @code {
-    private List<Expense> expenses = new();
+    private List<Transaction> _filteredTransactions = new();
+    private List<Category> _categories = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        expenses = await ExpenseService.GetExpensesAsync();
-        ExpenseService.OnExpensesChanged += HandleExpensesChanged;
+        // Subscribe to service events
+        TransactionService.OnTransactionsChanged += HandleDataChanged;
+        CategoryService.OnCategoriesChanged += HandleDataChanged;
+        LoadData();
     }
 
-    private void HandleExpensesChanged()
+    private void LoadData()
     {
+        _categories = CategoryService.GetAll();
+        ApplyFilters();
+        CalculateSummary();
+    }
+
+    private void HandleDataChanged()
+    {
+        LoadData();
         StateHasChanged();  // Trigger UI re-render
+    }
+
+    private void DeleteTransaction(int id)
+    {
+        TransactionService.Delete(id);
+        // Service fires event → HandleDataChanged called → UI updates
+    }
+
+    public void Dispose()
+    {
+        // Prevent memory leaks
+        TransactionService.OnTransactionsChanged -= HandleDataChanged;
+        CategoryService.OnCategoriesChanged -= HandleDataChanged;
+    }
+}
+```
+
+**Service Implementation**:
+```csharp
+public class TransactionService
+{
+    private readonly List<Transaction> _transactions = new();
+    public event Action? OnTransactionsChanged;
+
+    public void Delete(int id)
+    {
+        var removed = _transactions.RemoveAll(t => t.Id == id);
+        if (removed > 0)
+        {
+            OnTransactionsChanged?.Invoke();  // Notify all subscribers
+        }
     }
 }
 ```
@@ -688,9 +744,9 @@ End Users
 3. **IIS**: Traditional Windows hosting
 4. **Linux + Nginx**: Reverse proxy setup
 
-## Data Model Architecture (Phase-01)
+## Data Model Architecture (Phase 01-03)
 
-### Core Models Implemented
+### Core Models Implemented (Phase-01)
 
 ```csharp
 // TransactionType Enum
@@ -721,6 +777,51 @@ public class Transaction
     public Category? Category { get; set; }        // Navigation property
 }
 ```
+
+### Service Layer (Phase-02)
+
+```csharp
+// CategoryService - Manages categories with seed data
+public class CategoryService
+{
+    private readonly List<Category> _categories = new();
+    public event Action? OnCategoriesChanged;
+
+    public List<Category> GetAll();
+    public Category? GetById(int id);
+    public void Add(Category category);
+    public void Update(Category category);
+    public void Delete(int id);
+}
+
+// TransactionService - Manages transactions with filtering and summaries
+public class TransactionService
+{
+    private readonly List<Transaction> _transactions = new();
+    public event Action? OnTransactionsChanged;
+
+    public List<Transaction> GetAll();
+    public Transaction? GetById(int id);
+    public List<Transaction> GetFiltered(int? categoryId, DateTime? startDate,
+                                          DateTime? endDate, TransactionType? type);
+    public void Add(Transaction transaction);
+    public void Update(Transaction transaction);
+    public void Delete(int id);
+    public decimal GetTotalBalance();
+    public decimal GetTotalIncome();
+    public decimal GetTotalExpenses();
+    public Dictionary<int, decimal> GetCategoryTotals();
+}
+```
+
+### UI Component Layer (Phase-03)
+
+**Transactions.razor** implements complete money tracking UI:
+- Summary cards displaying real-time totals
+- Filter controls for data exploration
+- Transaction table with inline actions
+- Event-driven updates via service subscriptions
+- Proper disposal to prevent memory leaks
 
 ### Model Validation
 
