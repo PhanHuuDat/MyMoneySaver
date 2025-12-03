@@ -13,7 +13,17 @@
       "Bash(bash:*)",
       "Skill(docs-seeker)",
       "Bash(node scripts/fetch-docs.js:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: implement Phase 01 data models for money tracker\n\nCreated foundation data models with comprehensive validation:\n- TransactionType enum (Expense/Income)\n- Category model (Id, Name, Icon, Color with validation)\n- Transaction model (Amount, CategoryId, Description, Date, Type)\n\nAll models:\n- Full XML documentation\n- Validation attributes (Required, Range, StringLength, RegularExpression)\n- Nullable reference types\n- Modern C# syntax\n- Files under 200 lines\n\nTesting: 54/54 tests passed (100%)\nCode Review: 0 critical issues\nStandards: YAGNI/KISS/DRY compliant\n\nPlan: phase-01-data-models\nStatus: ✓ Completed 2025-12-02\nEOF\n)\")",
+      "Bash(pwsh -Command \"& ''C:\\Users\\user\\.claude\\skills\\dotnet-blazor\\scripts\\create-test-project.ps1'' -ProjectName MyMoneySaver -TestType unit\")",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet tool install:*)",
+      "Bash(find:*)",
+      "Bash(PowerShell -Command \"Get-Date -UFormat ''%y%m%d''\")",
+      "Bash(git commit:*)",
+      "Bash(repomix:*)"
     ],
     "deny": [],
     "ask": []
