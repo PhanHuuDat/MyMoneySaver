@@ -173,6 +173,7 @@ dotnet publish -c Release -o ./publish
 - `/counter` - Counter demo (interactive auto)
 - `/weather` - Weather demo (streaming render)
 - `/muddemo` - MudBlazor components demo (interactive server)
+- `/transactions` - Money tracker (interactive server) - **NEW: Full CRUD operations**
 
 ## Configuration
 
@@ -224,13 +225,16 @@ Comprehensive docs in `docs/` directory:
 
 ## Roadmap
 
-### Phase 1: Foundation (Current)
+### Phase 1: Foundation (COMPLETE ✅)
 - [x] Project setup
 - [x] Documentation
 - [x] MudBlazor integration
-- [ ] Database schema
-- [ ] Core CRUD operations
-- [ ] Basic UI implementation
+- [x] Data models (Phase 01)
+- [x] Service layer (Phase 02)
+- [x] Core CRUD operations (Phase 03)
+- [x] Transaction tracking UI (Phase 03)
+- [x] Infrastructure wiring (Phase 04)
+- [x] **MVP COMPLETE (2025-12-03)**
 
 ### Phase 2: Core Features
 - [ ] Expense tracking

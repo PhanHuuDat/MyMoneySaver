@@ -744,7 +744,7 @@ End Users
 3. **IIS**: Traditional Windows hosting
 4. **Linux + Nginx**: Reverse proxy setup
 
-## Data Model Architecture (Phase 01-03)
+## Data Model Architecture (Phase 01-04)
 
 ### Core Models Implemented (Phase-01)
 
@@ -778,7 +778,7 @@ public class Transaction
 }
 ```
 
-### Service Layer (Phase-02)
+### Service Layer & DI Integration (Phase 02-04)
 
 ```csharp
 // CategoryService - Manages categories with seed data
@@ -812,6 +812,15 @@ public class TransactionService
     public decimal GetTotalExpenses();
     public Dictionary<int, decimal> GetCategoryTotals();
 }
+
+// DI Registration (Phase-04, Program.cs)
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<TransactionService>();
+
+// Scoped lifetime ensures:
+// - New instance per HTTP request/SignalR connection
+// - Session-based data isolation
+// - Automatic disposal at end of scope
 ```
 
 ### UI Component Layer (Phase-03)

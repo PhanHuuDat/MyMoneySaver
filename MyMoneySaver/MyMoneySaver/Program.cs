@@ -18,6 +18,10 @@ namespace MyMoneySaver
             // Add MudBlazor services
             builder.Services.AddMudServices();
 
+            // Add application services
+            builder.Services.AddScoped<MyMoneySaver.Services.TransactionService>();
+            builder.Services.AddScoped<MyMoneySaver.Services.CategoryService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
