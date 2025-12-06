@@ -1,7 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
 using MyMoneySaver.Models;
-using Xunit;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyMoneySaver.Tests.Models;
 

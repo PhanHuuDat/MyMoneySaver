@@ -1,6 +1,5 @@
-using MyMoneySaver.Client.Pages;
-using MyMoneySaver.Components;
 using MudBlazor.Services;
+using MyMoneySaver.Components;
 
 namespace MyMoneySaver
 {

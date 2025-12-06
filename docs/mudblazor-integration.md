@@ -44,10 +44,10 @@ builder.Services.AddMudServices();
 ```html
 <!-- In <head> -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" />
 
 <!-- Before </body> -->
-<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+<script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
 ```
 
 ### 4. MudBlazor Providers
@@ -248,10 +248,10 @@ builder.Services.AddMudServices(config =>
 
 ## Notes
 
-- Bootstrap 5 remains available for compatibility
-- Both frameworks can coexist during migration
+- MudBlazor is the sole UI framework (Bootstrap removed)
+- Uses .NET 10 @Assets[] helper for static asset references
 - MudBlazor requires .NET 6.0+ (currently using .NET 10.0)
-- No conflicts between MudBlazor and existing Blazor components
+- No conflicts with existing Blazor components
 
 ---
 

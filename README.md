@@ -37,7 +37,7 @@ dotnet run
 **Type**: Blazor Web Application
 **Framework**: .NET 10.0
 **Architecture**: Hybrid (Server + WebAssembly)
-**UI**: MudBlazor 8.15.0 (Material Design) + Bootstrap 5
+**UI**: MudBlazor 8.15.0 (Material Design)
 **Status**: Initial template stage
 
 ### Key Features (Planned)
@@ -53,7 +53,7 @@ dotnet run
 ### Frontend
 - **Blazor Web App**: C# for client and server
 - **Render Modes**: Static, Server, WebAssembly, Auto
-- **UI Framework**: MudBlazor 8.15.0 (Material Design) + Bootstrap 5
+- **UI Framework**: MudBlazor 8.15.0 (Material Design)
 - **JavaScript Interop**: Minimal, as needed
 
 ### Backend
@@ -307,7 +307,6 @@ For issues or questions:
 - [Blazor Documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/)
 - [.NET 10.0 Release](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview)
 - [MudBlazor](https://mudblazor.com/)
-- [Bootstrap 5](https://getbootstrap.com/docs/5.0/)
 
 ### Learning
 - [Blazor Tutorial](https://dotnet.microsoft.com/learn/aspnet/blazor-tutorial/intro)

@@ -264,16 +264,6 @@ Following development rules:
 
 ---
 
-## Bootstrap Integration
-
-- **Version**: Bootstrap 5 (bundled in wwwroot/lib/bootstrap/)
-- **Files**: Includes full CSS/JS, minified versions, source maps, RTL support
-- **Usage**: Imported in App.razor via `@Assets` helper
-- **Components**: Uses Bootstrap classes (btn, table, nav, etc.)
-- **Icons**: Bootstrap Icons (bi-*) used in NavMenu
-
----
-
 ## MudBlazor Integration
 
 - **Version**: MudBlazor 8.15.0

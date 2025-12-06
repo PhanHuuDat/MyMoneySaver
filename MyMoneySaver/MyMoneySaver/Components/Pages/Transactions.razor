@@ -53,14 +53,14 @@
                 <MudSelect T="int?" Label="Category" @bind-Value="_filterCategoryId" Clearable>
                     @foreach (var cat in _categories)
                     {
-                        <MudSelectItem Value="@cat.Id">@cat.Name</MudSelectItem>
+                        <MudSelectItem T="int?" Value="@((int?)cat.Id)">@cat.Name</MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="3">
                 <MudSelect T="TransactionType?" Label="Type" @bind-Value="_filterType" Clearable>
-                    <MudSelectItem Value="@TransactionType.Income">Income</MudSelectItem>
-                    <MudSelectItem Value="@TransactionType.Expense">Expense</MudSelectItem>
+                    <MudSelectItem T="TransactionType?" Value="@((TransactionType?)TransactionType.Income)">Income</MudSelectItem>
+                    <MudSelectItem T="TransactionType?" Value="@((TransactionType?)TransactionType.Expense)">Expense</MudSelectItem>
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" md="2">
@@ -141,6 +141,9 @@
     private DateTime? _filterStartDate;
     private DateTime? _filterEndDate;
 
+    // Disposal tracking
+    private bool _disposed = false;
+
     protected override void OnInitialized()
     {
         // Subscribe to service events
@@ -174,10 +177,24 @@
         _totalExpenses = TransactionService.GetTotalExpenses();
     }
 
-    private void HandleDataChanged()
+    private async void HandleDataChanged()
     {
-        LoadData();
-        StateHasChanged();
+        if (_disposed) return;
+
+        try
+        {
+            await InvokeAsync(() =>
+            {
+                if (_disposed) return;
+
+                LoadData();
+                StateHasChanged();
+            });
+        }
+        catch (ObjectDisposedException)
+        {
+            // Component was disposed during render, ignore
+        }
     }
 
     private async Task OpenAddDialog()
@@ -208,16 +225,32 @@
     // Helper methods
     private string FormatCurrency(decimal amount) => $"${amount:N2}";
     private Color GetBalanceColor() => _totalBalance >= 0 ? Color.Success : Color.Error;
-    private string GetCategoryName(int categoryId) =>
-        _categories.FirstOrDefault(c => c.Id == categoryId)?.Name ?? "Unknown";
-    private string GetCategoryIcon(int categoryId) =>
-        _categories.FirstOrDefault(c => c.Id == categoryId)?.Icon ?? "category";
-    private string GetCategoryColor(int categoryId) =>
-        _categories.FirstOrDefault(c => c.Id == categoryId)?.Color ?? "#757575";
+
+    private string GetCategoryName(int categoryId)
+    {
+        if (_disposed) return "Unknown";
+        return _categories.FirstOrDefault(c => c.Id == categoryId)?.Name ?? "Unknown";
+    }
+
+    private string GetCategoryIcon(int categoryId)
+    {
+        if (_disposed) return "category";
+        return _categories.FirstOrDefault(c => c.Id == categoryId)?.Icon ?? "category";
+    }
+
+    private string GetCategoryColor(int categoryId)
+    {
+        if (_disposed) return "#757575";
+        return _categories.FirstOrDefault(c => c.Id == categoryId)?.Color ?? "#757575";
+    }
 
     public void Dispose()
     {
+        // Unsubscribe FIRST to prevent new events
         TransactionService.OnTransactionsChanged -= HandleDataChanged;
         CategoryService.OnCategoriesChanged -= HandleDataChanged;
+
+        // Then mark as disposed
+        _disposed = true;
     }
 }
