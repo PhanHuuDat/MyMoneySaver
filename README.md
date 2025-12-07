@@ -235,6 +235,7 @@ Comprehensive docs in `docs/` directory:
 - [x] Transaction tracking UI (Phase 03)
 - [x] Infrastructure wiring (Phase 04)
 - [x] **MVP COMPLETE (2025-12-03)**
+- [x] **Bootstrap removal & MudBlazor cleanup (Phase 01, 2025-12-07)**
 
 ### Phase 2: Core Features
 - [ ] Expense tracking
