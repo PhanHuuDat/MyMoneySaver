@@ -6,20 +6,10 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <AppBar OnDrawerToggle="@ToggleDrawer" />
-    <NavMenu @bind-IsOpen="@_drawerOpen" />
+    <Shell />
     <MudMainContent>
-        <div class="content">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-4">
             @Body
-        </div>
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
-
-@code {
-    private bool _drawerOpen = false;
-
-    private void ToggleDrawer()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-}
