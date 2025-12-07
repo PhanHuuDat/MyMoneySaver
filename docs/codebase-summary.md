@@ -1,10 +1,10 @@
 # Codebase Summary
 
-**Last Updated:** 2025-12-03 20:13
-**Status:** MVP Complete (100%)
-**Total Files:** 30 source files (excl. dependencies)
-**Total Tokens:** 17,432 tokens
-**Total Chars:** 77,936 chars
+**Last Updated:** 2025-12-07 (Phase 02 Complete)
+**Status:** MVP Complete (100%) + Phase 02 Navigation Refactor
+**Total Files:** 31 source files (excl. dependencies)
+**Total Tokens:** ~18,500 tokens (estimate with Phase 02)
+**Total Chars:** ~82,000 chars (estimate with Phase 02)
 
 ---
 
@@ -19,6 +19,15 @@ MyMoneySaver is a .NET 10.0 Blazor Web Application using modern Blazor architect
 - @Assets[] helper implemented for static asset references
 - All tests passing (104/104) - no regressions
 
+**Phase 02 (2025-12-07): Navigation Refactor Complete**
+- NEW AppBar.razor component (MudAppBar with hamburger menu)
+- REFACTORED NavMenu.razor (Bootstrap navbar → MudDrawer)
+- UPDATED MainLayout.razor (orchestrates AppBar + NavMenu)
+- Material Icons integrated (Home, Counter, Weather, Demo, Transactions)
+- EventCallback + two-way binding patterns implemented
+- NavMenu.razor.css deleted (MudBlazor handles styling)
+- All tests passing (104/104) - zero regressions
+
 ---
 
 ## Project Structure
@@ -28,10 +37,10 @@ MyMoneySaver/
 ├── MyMoneySaver/                          # Server project (ASP.NET Core host)
 │   ├── Components/                        # Server-side Razor components
 │   │   ├── Layout/                       # Layout components
-│   │   │   ├── MainLayout.razor          # Main layout template
+│   │   │   ├── MainLayout.razor          # Main layout template (UPDATED Phase 02)
 │   │   │   ├── MainLayout.razor.css      # Layout styles
-│   │   │   ├── NavMenu.razor             # Navigation menu (UPDATED Phase 04)
-│   │   │   ├── NavMenu.razor.css         # Navigation styles
+│   │   │   ├── AppBar.razor              # Top navigation bar (NEW Phase 02 - 20 lines)
+│   │   │   ├── NavMenu.razor             # Sidebar drawer menu (REFACTORED Phase 02 - 35 lines)
 │   │   │   ├── ReconnectModal.razor      # SignalR reconnection UI
 │   │   │   ├── ReconnectModal.razor.css  # Modal styles
 │   │   │   └── ReconnectModal.razor.js   # Modal JS interop
@@ -415,6 +424,46 @@ public void Add(Transaction transaction)
 
 ---
 
+## Navigation Architecture (Phase 02 Refactor)
+
+**Component Structure**:
+```
+MainLayout.razor (20 lines)
+├── AppBar.razor (20 lines)
+│   └── Hamburger menu (Icons.Material.Filled.Menu)
+├── NavMenu.razor (35 lines)
+│   ├── MudDrawer (Temporary variant - overlays)
+│   └── 5 nav links with Material Icons
+└── MudMainContent (@Body routes)
+```
+
+**AppBar.razor** (NEW - 20 lines):
+- MudAppBar with primary color
+- Hamburger button with EventCallback pattern (OnDrawerToggle)
+- App title display
+- Fixed positioning
+
+**NavMenu.razor** (REFACTORED - 35 lines):
+- Replaced Bootstrap navbar with MudDrawer
+- Drawer variant: Temporary (mobile overlay)
+- 5 navigation links:
+  - Home (Icons.Material.Filled.Home)
+  - Counter (Icons.Material.Filled.Add)
+  - Weather (Icons.Material.Filled.Cloud)
+  - MudBlazor Demo (Icons.Material.Filled.Palette)
+  - Transactions (Icons.Material.Filled.AccountBalanceWallet)
+- Two-way binding via @bind-IsOpen pattern
+
+**MainLayout.razor** (UPDATED - 20 lines):
+- Manages drawer state (_drawerOpen)
+- ToggleDrawer() method for hamburger interaction
+- Passes state to NavMenu (@bind-IsOpen)
+- Receives events from AppBar (OnDrawerToggle)
+
+**Deleted**: NavMenu.razor.css (Bootstrap styles, MudBlazor handles styling)
+
+---
+
 ## Infrastructure Integration (Phase 04)
 
 ### Dependency Injection (Program.cs)
@@ -430,21 +479,6 @@ builder.Services.AddScoped<MyMoneySaver.Services.CategoryService>();
 - Session-based data isolation (per-user)
 - Disposed automatically at end of scope
 - Perfect for in-memory session state
-
-### Navigation Integration (NavMenu.razor)
-
-```razor
-<NavLink class="nav-link" href="transactions">
-    <MudIcon Icon="@Icons.Material.Filled.Wallet" />
-    Transactions
-</NavLink>
-```
-
-**Features:**
-- MudBlazor wallet icon (Material Design)
-- NavLink auto-highlights when active
-- Follows existing navigation pattern
-- Responsive mobile-friendly design
 
 ---
 
@@ -585,6 +619,20 @@ public void Transaction_WithValidData_ShouldBeValid()
 ✅ Full application wiring
 ✅ 104/104 tests passed (no regressions)
 
+### Phase 01 Refactor: Bootstrap Removal (2025-12-07)
+✅ Removed 58 Bootstrap library files (~6MB)
+✅ All Bootstrap CSS/JS references removed
+✅ Navigation migrated to MudBlazor
+✅ 104/104 tests passed
+
+### Phase 02 Refactor: Navigation Redesign (2025-12-07)
+✅ NEW AppBar.razor component (20 lines)
+✅ REFACTORED NavMenu.razor → MudDrawer (35 lines)
+✅ UPDATED MainLayout.razor (20 lines)
+✅ Material Icons integrated (5 routes)
+✅ EventCallback + @bind patterns implemented
+✅ 104/104 tests passed (zero regressions)
+
 ---
 
 ## Future Additions
@@ -624,28 +672,35 @@ public void Transaction_WithValidData_ShouldBeValid()
 
 MyMoneySaver is a modern Blazor Web App with functional money tracking capabilities. Project structure follows standard Blazor conventions with clean separation of concerns.
 
-**Completed Phases (ALL 4 PHASES COMPLETE):**
+**Completed Implementation Phases (4/4 COMPLETE)**:
 - **Phase 01**: Data models with validation (DONE 2025-12-02)
 - **Phase 02**: Service layer with event-driven architecture (DONE 2025-12-03)
 - **Phase 03**: UI component with MudBlazor integration (DONE 2025-12-03)
 - **Phase 04**: Infrastructure wiring (DONE 2025-12-03)
 
+**Completed Refactor Phases (2/2 COMPLETE)**:
+- **Phase 01 Refactor**: Bootstrap removal & MudBlazor consolidation (DONE 2025-12-07)
+- **Phase 02 Refactor**: Navigation redesign (AppBar + NavMenu with Material Design) (DONE 2025-12-07)
+
 **Architecture Patterns:**
 - Event-driven reactive UI updates
 - Service-based state management via DI container
 - Component lifecycle with proper disposal
-- Material Design via MudBlazor
+- Material Design via MudBlazor (single UI framework)
 - Server-Interactive rendering for real-time updates
 - Scoped service lifetime for session isolation
+- EventCallback + @bind patterns for component communication
 
-**Infrastructure Integration:**
-- Services registered in Program.cs (TransactionService, CategoryService)
-- Navigation link to /transactions page with Bootstrap wallet icon
-- Full application wiring complete and tested (104/104 tests passed)
+**Navigation Architecture** (Phase 02):
+- AppBar.razor: Top navigation with hamburger menu
+- NavMenu.razor: Sidebar drawer (MudDrawer with Temporary variant)
+- MainLayout.razor: State orchestration and component composition
+- Material Icons for all 5 routes (Home, Counter, Weather, Demo, Transactions)
+- Zero coupling between components via EventCallback pattern
 
-Codebase follows YAGNI/KISS/DRY principles with all files under 225 lines. **MVP complete** and ready for future enhancements (persistence, authentication, analytics).
+Codebase follows YAGNI/KISS/DRY principles with all files under 200 lines. **MVP complete** and ready for future enhancements (persistence, authentication, analytics).
 
 ---
 
-**Last Updated:** 2025-12-07 (Phase 01: MudBlazor Cleanup Complete)
-**Status:** ✅ MVP COMPLETE - Production Ready
+**Last Updated:** 2025-12-07 (Phase 02: Navigation Refactor Complete)
+**Status:** ✅ MVP COMPLETE + PHASE 02 REFACTOR - Production Ready

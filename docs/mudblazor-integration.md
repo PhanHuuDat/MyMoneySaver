@@ -262,6 +262,73 @@ Bootstrap 5 has been fully removed from the project:
 - Consistent Material Design aesthetic across app
 - Cleaner CSS without competing frameworks
 
+## Navigation Refactor (Phase 02 - MudBlazor Material Design)
+
+**Status**: Complete - 2025-12-07
+
+Navigation fully refactored from Bootstrap to MudBlazor Material Design:
+
+### Components Created/Updated
+
+1. **AppBar.razor** (NEW - 20 lines)
+   - MudAppBar with Material Design styling
+   - Hamburger menu button with Material Icons (Icons.Material.Filled.Menu)
+   - App title display (MyMoneySaver)
+   - Fixed positioning (Fixed="true")
+   - Event callback pattern for drawer toggle (OnDrawerToggle)
+
+2. **NavMenu.razor** (REFACTORED - 35 lines)
+   - Replaced Bootstrap navbar with MudDrawer component
+   - Drawer variant: Temporary (mobile-first, overlays content)
+   - NavMenu contains 5 navigation links with Material Icons:
+     - Home (Icons.Material.Filled.Home)
+     - Counter (Icons.Material.Filled.Add)
+     - Weather (Icons.Material.Filled.Cloud)
+     - MudBlazor Demo (Icons.Material.Filled.Palette)
+     - Transactions (Icons.Material.Filled.AccountBalanceWallet)
+   - Two-way binding support (@bind-IsOpen pattern)
+   - Semantic icon matching for route purposes
+
+3. **MainLayout.razor** (UPDATED - 25 lines)
+   - Orchestrates AppBar and NavMenu components
+   - Manages drawer state (_drawerOpen bool)
+   - Implements EventCallback pattern for component communication
+   - MudLayout wraps all components with proper hierarchy
+
+4. **NavMenu.razor.css** (DELETED)
+   - Bootstrap-specific styles removed
+   - MudBlazor components handle all styling
+
+### Architecture Patterns
+
+**Component Hierarchy**:
+```
+MainLayout (owns drawer state)
+├── AppBar (exposes OnDrawerToggle event)
+├── NavMenu (accepts IsOpen parameter via @bind)
+└── MudMainContent (@Body routes)
+```
+
+**State Management**:
+- Parent-owned state (_drawerOpen in MainLayout)
+- EventCallback pattern (AppBar.OnDrawerToggle)
+- Two-way binding (@bind-IsOpen for NavMenu)
+- Zero coupling between navigation components
+
+**Material Design Compliance**:
+- All icons from Icons.Material.Filled namespace
+- MudAppBar elevation/color matches Material spec
+- MudDrawer uses Temporary variant (overlay behavior)
+- Proper z-index hierarchy maintained
+
+### Benefits
+
+- Material Design consistency across UI
+- Mobile-first responsive design (drawer overlays on mobile)
+- Reduced component complexity vs Bootstrap
+- Better semantic icon usage (matching route purposes)
+- Improved component testability via EventCallback pattern
+
 ## Notes
 
 - MudBlazor is the sole UI framework (Bootstrap completely removed)

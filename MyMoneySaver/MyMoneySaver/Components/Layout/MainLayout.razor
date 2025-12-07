@@ -1,4 +1,4 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -6,7 +6,20 @@
 <MudSnackbarProvider />
 
 <MudLayout>
+    <AppBar OnDrawerToggle="@ToggleDrawer" />
+    <NavMenu @bind-IsOpen="@_drawerOpen" />
     <MudMainContent>
-        @Body
+        <div class="content">
+            @Body
+        </div>
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private bool _drawerOpen = false;
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
